@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.mygdx.game.MyTanksGame;
 import com.mygdx.game.actors.TankActor;
+import com.mygdx.game.views.CommandsButtonsView;
 
 /**
  * Created by Goshan on 31.01.2017.
@@ -19,8 +20,9 @@ public class GameScreen extends ScreenAdapter {
 
     private Stage stage;
     private SpriteBatch batch;
-    FPSLogger logger;
-    TankActor tankActor;
+    private FPSLogger logger;
+    private TankActor tankActor;
+    private CommandsButtonsView commandsButtons;
 
     public GameScreen(MyTanksGame game)
     {
@@ -32,6 +34,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void show() {
         addTank();
+        addCommands();
         moveTank();
     }
 
@@ -57,10 +60,19 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void moveTank(){
-        MoveToAction moveAction = new MoveToAction();
-        moveAction.setPosition(300f, 0f);
-        moveAction.setDuration(10f);
-        tankActor.addAction(moveAction);
+        tankActor.addMoveAction(1, 1);
+        tankActor.addMoveAction(2, 0);
+        tankActor.addRotateAction(90f);
+        tankActor.addRotateAction(-45f);
+        tankActor.addMoveAction(1, 1);
+        tankActor.addMoveAction(2, 0);
+
+        tankActor.startActions();
+    }
+    private void addCommands(){
+
+        commandsButtons = new CommandsButtonsView();
+        stage.addActor(commandsButtons);
     }
 
 }

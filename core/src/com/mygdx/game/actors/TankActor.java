@@ -8,7 +8,7 @@ import com.mygdx.game.utils.Settings;
  * Created by Goshan on 31.01.2017.
  */
 
-public class TankActor extends MainActor {
+public class TankActor extends RunningActor {
 
 
     public TankActor (){
@@ -16,7 +16,7 @@ public class TankActor extends MainActor {
 
     }
     @Override
-    protected Texture getTexture(){
+    protected Texture createTexture(){
         return Primitives.getRect(Settings.TANK_WIDTH, Settings.TANK_HEIGHT);
     }
 
