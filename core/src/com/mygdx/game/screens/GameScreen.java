@@ -10,7 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.mygdx.game.MyTanksGame;
 import com.mygdx.game.actors.TankActor;
+import com.mygdx.game.utils.RotationValues;
 import com.mygdx.game.views.CommandsButtonsView;
+
+import javafx.scene.transform.Rotate;
 
 /**
  * Created by Goshan on 31.01.2017.
@@ -62,8 +65,8 @@ public class GameScreen extends ScreenAdapter {
     private void moveTank(){
         tankActor.addMoveAction(1, 1);
         tankActor.addMoveAction(2, 0);
-        tankActor.addRotateAction(90f);
-        tankActor.addRotateAction(-45f);
+        //tankActor.addRotateAction(RotationValues.DUAL);
+        //tankActor.addRotateAction(RotationValues.FOURTH);
         tankActor.addMoveAction(1, 1);
         tankActor.addMoveAction(2, 0);
 
