@@ -10,4 +10,9 @@ public class Settings {
 
     public final static int CELL_SIZE = 64;
     public final static float ACTOR_DURATION = 10f;
+
+    /**пикселей в секунду*/
+    public final static int TANK_SPEED = 200;
+    /**градусов в секунду*/
+    public final static int TANK_ROTATION_SPEED = 90;
 }

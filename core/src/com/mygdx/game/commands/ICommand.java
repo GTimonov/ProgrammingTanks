@@ -6,5 +6,4 @@ package com.mygdx.game.commands;
 
 public interface ICommand {
     void execute();
-    Boolean getIsRunning();
 }

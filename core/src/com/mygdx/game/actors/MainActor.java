@@ -44,25 +44,6 @@ public abstract class MainActor extends Actor {
     // public methods
     ///////////////////////////////////////////////////////////////////////////
 
-    public void setCellXY(int x , int y){
-        cellXY.x = x;
-        cellXY.y = y;
-    }
-
-    public float getCellX(){
-        return cellXY.x;
-    }
-    public float getCellY(){
-        return cellXY.y;
-    }
-
-    public void setCellAngle(int angle){
-        cellRotation = angle;
-    }
-    public int getCellAngle(){
-        return cellRotation;
-    }
-
     public void positionByOwnValues() {
         setY(cellXY.x * Settings.CELL_SIZE);
         setX(cellXY.y * Settings.CELL_SIZE);

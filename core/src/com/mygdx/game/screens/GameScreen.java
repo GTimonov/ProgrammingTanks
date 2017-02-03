@@ -6,10 +6,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.mygdx.game.MyTanksGame;
 import com.mygdx.game.actors.TankActor;
+import com.mygdx.game.commands.MoveCommand;
+import com.mygdx.game.commands.MovingCommandsInvoker;
+import com.mygdx.game.commands.RotateCommand;
 import com.mygdx.game.utils.RotationValues;
 import com.mygdx.game.views.CommandsButtonsView;
 
@@ -26,12 +30,16 @@ public class GameScreen extends ScreenAdapter {
     private FPSLogger logger;
     private TankActor tankActor;
     private CommandsButtonsView commandsButtons;
+    private MovingCommandsInvoker commandsInvoker;
+    private Boolean runCommands = false;
+
 
     public GameScreen(MyTanksGame game)
     {
         stage = game.stage;
         batch = game.batch;
         logger = new FPSLogger();
+        commandsInvoker = new MovingCommandsInvoker();
     }
 
     @Override
@@ -50,6 +58,11 @@ public class GameScreen extends ScreenAdapter {
         //tankActor.setY(i);
         //logger.log();
         //Gdx.app.log("delta  ", Float.toString(delta));
+
+        if (runCommands)
+            executeCommands();
+
+
     }
 
     @Override
@@ -63,19 +76,26 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void moveTank(){
-        tankActor.addMoveAction(1, 1);
-        tankActor.addMoveAction(2, 0);
-        //tankActor.addRotateAction(RotationValues.DUAL);
-        //tankActor.addRotateAction(RotationValues.FOURTH);
-        tankActor.addMoveAction(1, 1);
-        tankActor.addMoveAction(2, 0);
+        commandsInvoker.addCommand(new MoveCommand(tankActor, 1, 1));
+        commandsInvoker.addCommand(new MoveCommand(tankActor, 2, 0));
+        commandsInvoker.addCommand(new RotateCommand(tankActor, RotationValues.DUAL));
+        commandsInvoker.addCommand(new RotateCommand(tankActor, -RotationValues.DUAL));
+        commandsInvoker.addCommand(new RotateCommand(tankActor, RotationValues.HALF));
 
-        tankActor.startActions();
+        executeCommands();
+
     }
     private void addCommands(){
 
         commandsButtons = new CommandsButtonsView();
         stage.addActor(commandsButtons);
+    }
+
+    private void executeCommands(){
+        if (!tankActor.getIsRunningNow() && !tankActor.getIsRotateNow()) {
+            Boolean executed = commandsInvoker.executeNext();
+            runCommands = executed;
+        }
     }
 
 }
