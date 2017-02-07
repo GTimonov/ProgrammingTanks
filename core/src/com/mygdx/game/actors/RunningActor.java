@@ -3,6 +3,11 @@ package com.mygdx.game.actors;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.mygdx.game.utils.Settings;
 
 /**
@@ -13,26 +18,22 @@ public abstract class RunningActor extends MainActor {
 
     public RunningActor() {
         super();
-
     }
 
-    private Interpolation interpolation;
-    private float deltaTime;
-    private float distance;
-    private float angle;
-    private float duration;
-    private float angleOFMoving;
-    private Boolean isRunningNow = false;
-    private Boolean isRotateNow = false;
-    private Vector2 currentPosition;
-    private float currentRotation;
+    public interface OnFinishCallback{
+        void onFinishRunning();
+    }
+
+    private OnFinishCallback finishCallback;
+
+
     ///////////////////////////////////////////////////////////////////////////
     // public properties
     ///////////////////////////////////////////////////////////////////////////
 
-    public Boolean getIsRunningNow(){return isRunningNow;}
-
-    public Boolean getIsRotateNow(){return isRotateNow;}
+    public void registerCallback(OnFinishCallback callback){
+        finishCallback = callback;
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     //  public methods
@@ -40,22 +41,24 @@ public abstract class RunningActor extends MainActor {
 
 
     public void move(Vector2 position){
-        currentPosition = new Vector2(getX(), getY());
-        interpolation = Interpolation.sine;
-        deltaTime = 0f;
-        distance = position.len();
-        duration = distance / Settings.TANK_SPEED;
-        angleOFMoving = position.angleRad();
-        isRunningNow = true;
+
+        float duration = position.len() / Settings.TANK_SPEED;
+        MoveToAction action = Actions.action(MoveToAction.class);
+        action.setPosition(position.x + getX(), position.y + getY());
+        action.setDuration(duration);
+        action.setInterpolation(getInterpolation());
+        addAction(action);
     }
     public void rotate(int angle){
-        currentRotation = getRotation();
-        interpolation = Interpolation.sine;
-        deltaTime = 0f;
-        this.angle = angle;
-        duration = Math.abs(angle / Settings.TANK_ROTATION_SPEED);
-        isRotateNow = true;
-    }
+
+        float duration = Math.abs((float)angle / Settings.TANK_ROTATION_SPEED);
+        RotateToAction action =  Actions.action(RotateToAction.class);
+        action.setRotation(angle + getRotation());
+        action.setDuration(duration);
+        action.setInterpolation(getInterpolation());
+        addAction(action);
+
+}
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -63,50 +66,32 @@ public abstract class RunningActor extends MainActor {
     ///////////////////////////////////////////////////////////////////////////
     @Override
     public void draw(Batch batch, float alpha){
-        batch.draw(texture,this.getX(),getY(),this.getOriginX(),this.getOriginY(),this.getWidth(),
-                this.getHeight(),this.getScaleX(), this.getScaleY(),this.getRotation(),0,0,
-                texture.getWidth(),texture.getHeight(),false,false);
+        if (!Settings.IS_DEBUG) {
+            batch.draw(texture, this.getX(), getY(), this.getOriginX(), this.getOriginY(), this.getWidth(),
+                    this.getHeight(), this.getScaleX(), this.getScaleY(), this.getRotation(), 0, 0,
+                    (int)getWidth(), (int)getHeight(), false, false);
+        }
     }
 
     @Override
-    public void act(float delta){
-        super.act(delta);
-        if (isRunningNow)
-            updateMoving(delta);
-        else if (isRotateNow)
-            updateRotation(delta);
+    public void addAction(Action action){
+        super.addAction(Actions.sequence(action, new RunnableAction(){
+            public void run(){
+                if (finishCallback != null)
+                    finishCallback.onFinishRunning();
+            }
+        }));
     }
-
     ///////////////////////////////////////////////////////////////////////////
     // private methods
     ///////////////////////////////////////////////////////////////////////////
 
 
-    private void updateMoving(float delta){
-        deltaTime += delta;
-        float progress = deltaTime / duration;
-        if (progress > 1) {
-            isRunningNow = false;
-            return;
-        }
-        float distanceProgress = interpolation.apply(progress) * distance;
 
-        setX((float)Math.cos(angleOFMoving) * distanceProgress + currentPosition.x);
-        setY((float)Math.sin(angleOFMoving) * distanceProgress + currentPosition.y);
+    protected Interpolation getInterpolation(){
+        return Interpolation.sine;
     }
 
-    private void updateRotation(float delta){
-        deltaTime += delta;
-        float progress = deltaTime / duration;
-        if (progress > 1){
-            isRotateNow = false;
-            return;
-        }
-
-        float rotateProgress = interpolation.apply(progress) * angle;
-        setRotation(rotateProgress);
-
-    }
 
 
 }

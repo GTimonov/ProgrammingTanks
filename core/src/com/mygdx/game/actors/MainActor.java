@@ -23,7 +23,8 @@ public abstract class MainActor extends Actor {
     public MainActor (){
         texture = createTexture();
         cellXY = new Vector2();
-        setBounds(getX(),getY(),texture.getWidth(),texture.getHeight());
+        setBounds(getX(),getY(),getWidth(),getHeight());
+        setOrigin(getWidth()/2, getHeight()/2);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -32,7 +33,8 @@ public abstract class MainActor extends Actor {
     @Override
     public void draw(Batch batch, float alpha){
 
-        batch.draw(texture, getX(),getY());
+        if (!Settings.IS_DEBUG)
+            batch.draw(texture, getX(),getY());
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -44,10 +46,10 @@ public abstract class MainActor extends Actor {
     // public methods
     ///////////////////////////////////////////////////////////////////////////
 
-    public void positionByOwnValues() {
-        setY(cellXY.x * Settings.CELL_SIZE);
-        setX(cellXY.y * Settings.CELL_SIZE);
-        setRotation(cellRotation);
-    }
+    //public void setPositionByCell
 
+    public void positionItemByCell(int x , int y){
+        setX(x * Settings.CELL_SIZE + Settings.CELL_SIZE/2 - getWidth()/2);
+        setY(y * Settings.CELL_SIZE + Settings.CELL_SIZE/2 - getHeight()/2);
+    }
 }

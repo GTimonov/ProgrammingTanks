@@ -17,8 +17,18 @@ public class TankActor extends RunningActor {
     }
     @Override
     protected Texture createTexture(){
+        if (Settings.IS_DEBUG)
+            return null;
         return Primitives.getRect(Settings.TANK_WIDTH, Settings.TANK_HEIGHT);
     }
 
+    @Override
+    public float getWidth(){
+        return Settings.TANK_WIDTH;
+    }
+    @Override
+    public float getHeight(){
+        return Settings.TANK_HEIGHT;
+    }
 
 }
