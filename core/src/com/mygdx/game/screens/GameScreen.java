@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.game.MyTanksGame;
+import com.mygdx.game.controls.GameControl;
+import com.mygdx.game.models.GameModel;
+import com.mygdx.game.models.LevelModel;
 import com.mygdx.game.utils.Settings;
 import com.mygdx.game.views.CommandsButtonsView;
 import com.mygdx.game.views.WarSceneView;
@@ -23,11 +26,15 @@ public class GameScreen extends ScreenAdapter {
     private ShapeRenderer debugRenderer;
 
     private CommandsButtonsView commandsButtons;
+    private GameModel gameModel;
+    private GameControl gameControl;
+    private LevelModel levelModel;
 
 
 
-    public GameScreen(MyTanksGame game)
+    public GameScreen(MyTanksGame game, LevelModel levelModel)
     {
+        this.levelModel = levelModel;
         stage = game.stage;
         batch = game.batch;
         logger = new FPSLogger();
@@ -52,7 +59,13 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void show(){
         super.show();
-        stage.addActor(new WarSceneView());
+
+        gameModel = new GameModel(levelModel);
+        gameControl = new GameControl(gameModel);
+        stage.addActor(new WarSceneView(gameModel));
+
+        gameModel.createLevel();
+        gameModel.start();
     }
 
     @Override

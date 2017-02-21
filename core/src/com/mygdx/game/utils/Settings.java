@@ -20,5 +20,12 @@ public class Settings {
     /**градусов в секунду*/
     public final static int TANK_ROTATION_SPEED = 90;
 
+    /**количество клеток в секунду или пол оборота*/
+    public final static int MAIN_SPEED = 1;
+
+
+    /**коефициент скорости такнка откносительно MAIN_SPEED*/
+    public final static int TANK_CELLSPEED = 1;
+
 
 }

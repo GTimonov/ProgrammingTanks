@@ -9,16 +9,19 @@ import com.mygdx.game.actors.RunningActor;
 public class RotateCommand implements ICommand {
 
     private int degrees ;
-    private RunningActor runningActor;
 
-    public RotateCommand(RunningActor actor, int degrees){
-        runningActor = actor;
+
+    public RotateCommand(int degrees){
         this.degrees = degrees;
     }
 
 
-    public void execute(){
-        runningActor.rotate(degrees);
+    public void executeOn(RunningActor actor){
+
+        int tankRotation = (int)actor.getRotation();
+
+
+        actor.rotate(degrees + tankRotation);
     }
 
 

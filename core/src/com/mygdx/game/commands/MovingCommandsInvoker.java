@@ -1,7 +1,7 @@
 package com.mygdx.game.commands;
 
 import com.badlogic.gdx.utils.Array;
-
+import com.mygdx.game.actors.RunningActor;
 
 
 /**
@@ -21,10 +21,10 @@ public class MovingCommandsInvoker {
         return commandsStack.size > 0;
     }
 
-    public void executeNext(){
+    public void executeNext(RunningActor actor){
         if (hasCommand()){
             currentCommand = commandsStack.removeIndex(0);
-            currentCommand.execute();
+            currentCommand.executeOn(actor);
         }
     }
 }

@@ -6,9 +6,9 @@ package com.mygdx.game.utils;
 
 public final class RotationValues {
 
-    public static int FOURTH = 45;
-    public static int HALF = 90;
-    public static int HALF_DUAL = 135;
-    public static int DUAL = 180;
+    public static final int FOURTH = 45;
+    public static final int HALF = 90;
+    public static final int HALF_DUAL = 135;
+    public static final int DUAL = 180;
 
 }

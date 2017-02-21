@@ -8,6 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.commands.ICommand;
+import com.mygdx.game.commands.MoveCommand;
+import com.mygdx.game.commands.MovingCommandsInvoker;
+import com.mygdx.game.commands.RotateCommand;
+import com.mygdx.game.utils.RotationValues;
 import com.mygdx.game.utils.Settings;
 
 /**
@@ -18,22 +24,15 @@ public abstract class RunningActor extends MainActor {
 
     public RunningActor() {
         super();
+        commandsInvoker = new MovingCommandsInvoker();
     }
 
-    public interface OnFinishCallback{
-        void onFinishRunning();
-    }
-
-    private OnFinishCallback finishCallback;
-
+    private MovingCommandsInvoker commandsInvoker;
 
     ///////////////////////////////////////////////////////////////////////////
     // public properties
     ///////////////////////////////////////////////////////////////////////////
 
-    public void registerCallback(OnFinishCallback callback){
-        finishCallback = callback;
-    }
 
     ///////////////////////////////////////////////////////////////////////////
     //  public methods
@@ -53,12 +52,23 @@ public abstract class RunningActor extends MainActor {
 
         float duration = Math.abs((float)angle / Settings.TANK_ROTATION_SPEED);
         RotateToAction action =  Actions.action(RotateToAction.class);
-        action.setRotation(angle + getRotation());
+        action.setRotation(angle);
         action.setDuration(duration);
         action.setInterpolation(getInterpolation());
         addAction(action);
 
-}
+    }
+
+    public void setCommands(Array<ICommand> commands){
+        for (ICommand command: commands) {
+            commandsInvoker.addCommand(command);
+        }
+    }
+
+    public void applyCommand(){
+        if (commandsInvoker.hasCommand())
+            commandsInvoker.executeNext(this);
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -77,8 +87,7 @@ public abstract class RunningActor extends MainActor {
     public void addAction(Action action){
         super.addAction(Actions.sequence(action, new RunnableAction(){
             public void run(){
-                if (finishCallback != null)
-                    finishCallback.onFinishRunning();
+                applyCommand();
             }
         }));
     }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.game.models.LevelModel;
 import com.mygdx.game.screens.GameScreen;
 
 public class MyTanksGame extends Game {
@@ -17,9 +18,9 @@ public class MyTanksGame extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		//img = new Texture("badlogic.jpg");
 		stage = new Stage();
-		setScreen(new GameScreen(this));
+		setScreen(new GameScreen(this, new LevelModel(1)));
 	}
 
 	@Override
@@ -41,6 +42,6 @@ public class MyTanksGame extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+		//img.dispose();
 	}
 }
