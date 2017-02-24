@@ -8,13 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.commands.ICommand;
-import com.mygdx.game.commands.MoveCommand;
 import com.mygdx.game.commands.MovingCommandsInvoker;
-import com.mygdx.game.commands.RotateCommand;
-import com.mygdx.game.utils.RotationValues;
+import com.mygdx.game.models.LevelModel;
+import com.mygdx.game.utils.RotateHelper;
 import com.mygdx.game.utils.Settings;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 /**
  * Created by Goshan on 01.02.2017.
@@ -22,12 +23,15 @@ import com.mygdx.game.utils.Settings;
 
 public abstract class RunningActor extends MainActor {
 
-    public RunningActor() {
+    public RunningActor(LevelModel levelModel) {
         super();
         commandsInvoker = new MovingCommandsInvoker();
+        this.levelModel = levelModel;
     }
 
     private MovingCommandsInvoker commandsInvoker;
+
+    private LevelModel levelModel;
 
     ///////////////////////////////////////////////////////////////////////////
     // public properties
@@ -39,24 +43,39 @@ public abstract class RunningActor extends MainActor {
     ///////////////////////////////////////////////////////////////////////////
 
 
-    public void move(Vector2 position){
+    public void move(){
 
-        float duration = position.len() / Settings.TANK_SPEED;
-        MoveToAction action = Actions.action(MoveToAction.class);
-        action.setPosition(position.x + getX(), position.y + getY());
-        action.setDuration(duration);
-        action.setInterpolation(getInterpolation());
-        addAction(action);
+        Vector2 vec = RotateHelper.getNextCellByRotation(getRotation());
+        nextCell = currentCell.add(vec);
+
+        if (levelModel.checkCellForWall(nextCell))
+        {
+            if (RotateHelper.isRightAngle(getRotation()))
+                bounceBackAct();
+            else {
+                Vector2 rightCell = RotateHelper.getNextCellByRotation(getRotation() - RotateHelper.FOURTH);
+                Vector2 leftCell = RotateHelper.getNextCellByRotation(getRotation() + RotateHelper.FOURTH);
+                Boolean rightCellWall = levelModel.checkCellForWall(rightCell);//cправа стена
+                Boolean leftCellWall = levelModel.checkCellForWall(leftCell);//слева стена
+
+                if (!(rightCellWall ^ leftCellWall))
+                    bounceBackAct();
+                else if (leftCellWall)
+                    bounceRightAct(leftCell);
+                else if (rightCellWall)
+                    bounceLeftAct(rightCell);
+            }
+        }
+        else
+        {
+            moveAct(nextCell);
+        }
+    }
+    public void waitStep(){
+        waitAct();
     }
     public void rotate(int angle){
-
-        float duration = Math.abs((float)angle / Settings.TANK_ROTATION_SPEED);
-        RotateToAction action =  Actions.action(RotateToAction.class);
-        action.setRotation(angle);
-        action.setDuration(duration);
-        action.setInterpolation(getInterpolation());
-        addAction(action);
-
+        rotateAct(angle);
     }
 
     public void setCommands(Array<ICommand> commands){
@@ -87,6 +106,8 @@ public abstract class RunningActor extends MainActor {
     public void addAction(Action action){
         super.addAction(Actions.sequence(action, new RunnableAction(){
             public void run(){
+                currentCell = nextCell;
+
                 applyCommand();
             }
         }));
@@ -95,12 +116,51 @@ public abstract class RunningActor extends MainActor {
     // private methods
     ///////////////////////////////////////////////////////////////////////////
 
-
+    protected Vector2 nextCell;
 
     protected Interpolation getInterpolation(){
         return Interpolation.sine;
     }
 
+    protected float getSpeed(){
+        return Settings.MAIN_SPEED;
+    }
+
+    private void bounceBackAct(){
+        rotateAct(RotateHelper.DUAL);
+    }
+    private void bounceRightAct(Vector2 rightCell){
+        moveAct(rightCell);
+        rotateAct(RotateHelper.HALF);
+    }
+    private void bounceLeftAct(Vector2 leftCell){
+        moveAct(leftCell);
+        rotateAct(-RotateHelper.HALF);
+    }
+
+    private void waitAct(){
+        TemporalAction action = Actions.action(TemporalAction.class);
+        action.setDuration(getSpeed());
+        addAction(action);
+    }
+
+    private void rotateAct(int angle){
+        RotateToAction action =  Actions.action(RotateToAction.class);
+        action.setRotation(angle + getRotation());
+        action.setDuration(getSpeed());
+        action.setInterpolation(getInterpolation());
+        addAction(action);
+    }
+    private void moveAct(Vector2 nextCell)
+    {
+        float x = getCartesianXbyCell(nextCell.x);
+        float y = getCartesianYbyCell(nextCell.y);
+        MoveToAction action = Actions.action(MoveToAction.class);
+        action.setPosition(x, y);
+        action.setDuration(getSpeed());
+        action.setInterpolation(getInterpolation());
+        addAction(action);
+    }
 
 
 }

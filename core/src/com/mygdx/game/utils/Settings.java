@@ -14,18 +14,12 @@ public class Settings {
     public final static int CELLS_HORIZONTAL_COUNT = 10;
     public final static int CELLS_VERTICAL_COUNT = 10;
 
-
-    /**пикселей в секунду*/
-    public final static int TANK_SPEED = 200;
-    /**градусов в секунду*/
-    public final static int TANK_ROTATION_SPEED = 90;
-
     /**количество клеток в секунду или пол оборота*/
     public final static int MAIN_SPEED = 1;
 
 
     /**коефициент скорости такнка откносительно MAIN_SPEED*/
-    public final static int TANK_CELLSPEED = 1;
+    public final static float TANK_CELLSPEED = 1f;
 
 
 }

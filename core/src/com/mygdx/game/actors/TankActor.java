@@ -1,6 +1,7 @@
 package com.mygdx.game.actors;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.mygdx.game.models.LevelModel;
 import com.mygdx.game.utils.Primitives;
 import com.mygdx.game.utils.Settings;
 
@@ -11,8 +12,8 @@ import com.mygdx.game.utils.Settings;
 public class TankActor extends RunningActor {
 
 
-    public TankActor (){
-        super();
+    public TankActor (LevelModel levelModel){
+        super(levelModel);
 
     }
     @Override
@@ -29,6 +30,11 @@ public class TankActor extends RunningActor {
     @Override
     public float getHeight(){
         return Settings.TANK_HEIGHT;
+    }
+
+    @Override
+    public float getSpeed(){
+        return Settings.TANK_CELLSPEED;
     }
 
 }

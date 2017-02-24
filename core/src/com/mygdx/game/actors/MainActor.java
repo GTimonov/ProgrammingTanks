@@ -16,13 +16,12 @@ public abstract class MainActor extends Actor {
 
     protected Texture texture;
 
-    private Vector2 cellXY;
+    protected Vector2 currentCell;
 
-    private int cellRotation;
 
     public MainActor (){
         texture = createTexture();
-        cellXY = new Vector2();
+        currentCell = new Vector2();
         setBounds(getX(),getY(),getWidth(),getHeight());
         setOrigin(getWidth()/2, getHeight()/2);
     }
@@ -46,10 +45,27 @@ public abstract class MainActor extends Actor {
     // public methods
     ///////////////////////////////////////////////////////////////////////////
 
-    //public void setPositionByCell
+
 
     public void positionItemByCell(int x , int y){
-        setX(x * Settings.CELL_SIZE + Settings.CELL_SIZE/2 - getWidth()/2);
-        setY(y * Settings.CELL_SIZE + Settings.CELL_SIZE/2 - getHeight()/2);
+        currentCell.x = x;
+        currentCell.y = y;
+        setPosition(getCartesianXbyCell(x), getCartesianYbyCell(y));
     }
+
+    public Vector2 getCurrentCell(){
+        return currentCell;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // private
+    ///////////////////////////////////////////////////////////////////////////
+
+    protected float getCartesianXbyCell(float x){
+        return x * Settings.CELL_SIZE + Settings.CELL_SIZE/2 - getOriginX();
+    }
+    protected float getCartesianYbyCell(float y){
+        return y * Settings.CELL_SIZE + Settings.CELL_SIZE/2 - getOriginY();
+    }
+
 }

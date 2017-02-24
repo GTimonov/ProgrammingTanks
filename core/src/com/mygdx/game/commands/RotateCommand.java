@@ -17,11 +17,7 @@ public class RotateCommand implements ICommand {
 
 
     public void executeOn(RunningActor actor){
-
-        int tankRotation = (int)actor.getRotation();
-
-
-        actor.rotate(degrees + tankRotation);
+        actor.rotate(degrees);
     }
 
 

@@ -35,6 +35,8 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(MyTanksGame game, LevelModel levelModel)
     {
         this.levelModel = levelModel;
+        gameModel = new GameModel();
+        gameModel.setLevel(levelModel);
         stage = game.stage;
         batch = game.batch;
         logger = new FPSLogger();
@@ -60,12 +62,14 @@ public class GameScreen extends ScreenAdapter {
     public void show(){
         super.show();
 
-        gameModel = new GameModel(levelModel);
-        gameControl = new GameControl(gameModel);
-        stage.addActor(new WarSceneView(gameModel));
 
+
+        gameControl = new GameControl(gameModel);
+
+        stage.addActor(new WarSceneView(gameModel, levelModel));
         gameModel.createLevel();
-        gameModel.start();
+        gameControl.addCommand();
+        gameControl.startRunning();
     }
 
     @Override

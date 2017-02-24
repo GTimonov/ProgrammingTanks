@@ -3,9 +3,11 @@ package com.mygdx.game.views;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.mygdx.game.actors.MainActor;
 import com.mygdx.game.actors.TankActor;
 import com.mygdx.game.actors.WallActor;
 import com.mygdx.game.models.GameModel;
+import com.mygdx.game.models.LevelModel;
 import com.mygdx.game.utils.Settings;
 
 /**
@@ -14,10 +16,10 @@ import com.mygdx.game.utils.Settings;
 
 public class WarSceneView extends Group implements  GameModel.IModelListener{
 
-    public WarSceneView(GameModel model){
+    public WarSceneView(GameModel model, LevelModel levelModel){
 
         this.model = model;
-
+        this.levelModel = levelModel;
         model.addListener(this);
     }
 
@@ -25,25 +27,22 @@ public class WarSceneView extends Group implements  GameModel.IModelListener{
 
     private ShapeRenderer debugRenderer;
     private GameModel model;
-
+    private LevelModel levelModel;
 
 
     private void addTank(){
-        tankActor = new TankActor();
-        tankActor.positionItemByCell(1, 0);
-        this.addActor(tankActor);
 
+        tankActor = (TankActor) levelModel.getTank();
+        this.addActor(tankActor);
     }
 
     private void addWalls(){
-        for (int i = 0; i < 3; i++) {
-            WallActor wallActor = new WallActor();
-            wallActor.positionItemByCell((int)(Math.random()* Settings.CELLS_VERTICAL_COUNT), (int)(Math.random()* Settings.CELLS_HORIZONTAL_COUNT));
-            this.addActor(wallActor);
+        for (MainActor wall: levelModel.getWalls()) {
+            this.addActor(wall);
         }
+
     }
     private void moveTank(){
-
         tankActor.applyCommand();
     }
 
@@ -57,13 +56,16 @@ public class WarSceneView extends Group implements  GameModel.IModelListener{
     ///////////////////////////////////////////////////////////////////////////
     // GameModel.IModelEvents
     ///////////////////////////////////////////////////////////////////////////
+
     public void setupContent(){
+        this.levelModel = model.levelModel;
         addWalls();
         addTank();
-        tankActor.setCommands(model.getUserCommands());
+
     }
 
     public void start(){
+        tankActor.setCommands(model.getUserCommands());
         moveTank();
         moveEnemies();
     }

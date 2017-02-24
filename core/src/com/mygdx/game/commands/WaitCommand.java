@@ -8,14 +8,14 @@ import com.mygdx.game.actors.RunningActor;
 
 public class WaitCommand implements ICommand {
 
-    private int times;
 
-    public WaitCommand(RunningActor actor, int times) {
-        this.times = times;
+
+    public WaitCommand() {
+
 
     }
     public void executeOn(RunningActor actor){
-
+        actor.waitStep();
     }
 
 }
