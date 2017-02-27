@@ -29,6 +29,7 @@ public class GameControl {
     public void addCommand(){
         Array<ICommand> commands = new Array<ICommand>();
         commands.add(new MoveCommand());
+        //commands.add(new RotateCommand(-RotateHelper.DUAL));
         commands.add(new MoveCommand());
         commands.add(new MoveCommand());
         commands.add(new MoveCommand());

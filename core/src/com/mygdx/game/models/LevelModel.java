@@ -77,9 +77,9 @@ public class LevelModel {
         w.positionItemByCell(2, 2);
         walls.add(w);
 
-        MainActor e = new WallActor();
-        e.positionItemByCell(2, 1);
-        walls.add(e);
+//        MainActor e = new WallActor();
+//        e.positionItemByCell(2, 1);
+//        walls.add(e);
 
     }
     private void createEnemies(){

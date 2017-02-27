@@ -20,6 +20,7 @@ public abstract class MainActor extends Actor {
 
 
     public MainActor (){
+        super();
         texture = createTexture();
         currentCell = new Vector2();
         setBounds(getX(),getY(),getWidth(),getHeight());

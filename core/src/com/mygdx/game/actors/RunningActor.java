@@ -6,8 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.commands.ICommand;
@@ -46,36 +45,43 @@ public abstract class RunningActor extends MainActor {
     public void move(){
 
         Vector2 vec = RotateHelper.getNextCellByRotation(getRotation());
-        nextCell = currentCell.add(vec);
+        Vector2 nextCell = currentCell.cpy().add(vec);
 
         if (levelModel.checkCellForWall(nextCell))
         {
-            if (RotateHelper.isRightAngle(getRotation()))
-                bounceBackAct();
+
+            if (RotateHelper.isRightAngle(getRotation())) {
+                addAction(getRotateAction(RotateHelper.DUAL));
+            }
             else {
-                Vector2 rightCell = RotateHelper.getNextCellByRotation(getRotation() - RotateHelper.FOURTH);
-                Vector2 leftCell = RotateHelper.getNextCellByRotation(getRotation() + RotateHelper.FOURTH);
+                Vector2 rightCell = currentCell.cpy().add(RotateHelper.getNextCellByRotation(getRotation() - RotateHelper.FOURTH));
+                Vector2 leftCell = currentCell.cpy().add(RotateHelper.getNextCellByRotation(getRotation() + RotateHelper.FOURTH));
                 Boolean rightCellWall = levelModel.checkCellForWall(rightCell);//cправа стена
                 Boolean leftCellWall = levelModel.checkCellForWall(leftCell);//слева стена
 
-                if (!(rightCellWall ^ leftCellWall))
-                    bounceBackAct();
-                else if (leftCellWall)
-                    bounceRightAct(leftCell);
-                else if (rightCellWall)
-                    bounceLeftAct(rightCell);
+                if (!(rightCellWall ^ leftCellWall)) {
+                    addAction(getRotateAction(RotateHelper.DUAL));
+                }
+                else if (leftCellWall) {
+                    addAction(getBounceAction(rightCell, -RotateHelper.HALF));
+                }
+                else if (rightCellWall) {
+                    addAction(getBounceAction(leftCell,RotateHelper.HALF));
+
+                }
             }
         }
         else
         {
-            moveAct(nextCell);
+            addAction(getMoveAction(nextCell));
+            currentCell = nextCell.cpy();
         }
     }
     public void waitStep(){
         waitAct();
     }
     public void rotate(int angle){
-        rotateAct(angle);
+        addAction(getRotateAction(angle));
     }
 
     public void setCommands(Array<ICommand> commands){
@@ -104,19 +110,22 @@ public abstract class RunningActor extends MainActor {
 
     @Override
     public void addAction(Action action){
-        super.addAction(Actions.sequence(action, new RunnableAction(){
-            public void run(){
-                currentCell = nextCell;
+
+        super.addAction(Actions.sequence(action, new Action(){
+            public boolean act (float delta){
 
                 applyCommand();
+                return true;
             }
         }));
     }
+
+
     ///////////////////////////////////////////////////////////////////////////
     // private methods
     ///////////////////////////////////////////////////////////////////////////
 
-    protected Vector2 nextCell;
+
 
     protected Interpolation getInterpolation(){
         return Interpolation.sine;
@@ -126,32 +135,24 @@ public abstract class RunningActor extends MainActor {
         return Settings.MAIN_SPEED;
     }
 
-    private void bounceBackAct(){
-        rotateAct(RotateHelper.DUAL);
-    }
-    private void bounceRightAct(Vector2 rightCell){
-        moveAct(rightCell);
-        rotateAct(RotateHelper.HALF);
-    }
-    private void bounceLeftAct(Vector2 leftCell){
-        moveAct(leftCell);
-        rotateAct(-RotateHelper.HALF);
+    private Action getBounceAction(Vector2 cell, int angle){
+        return Actions.parallel(getMoveAction(cell), getRotateAction(angle));
     }
 
-    private void waitAct(){
+    private Action waitAct(){
         TemporalAction action = Actions.action(TemporalAction.class);
         action.setDuration(getSpeed());
-        addAction(action);
+        return action;
     }
 
-    private void rotateAct(int angle){
-        RotateToAction action =  Actions.action(RotateToAction.class);
-        action.setRotation(angle + getRotation());
+    private Action getRotateAction(int angle){
+        RotateByAction action =  Actions.action(RotateByAction.class);
+        action.setAmount(angle);
         action.setDuration(getSpeed());
         action.setInterpolation(getInterpolation());
-        addAction(action);
+        return action;
     }
-    private void moveAct(Vector2 nextCell)
+    private Action getMoveAction(Vector2 nextCell)
     {
         float x = getCartesianXbyCell(nextCell.x);
         float y = getCartesianYbyCell(nextCell.y);
@@ -159,7 +160,7 @@ public abstract class RunningActor extends MainActor {
         action.setPosition(x, y);
         action.setDuration(getSpeed());
         action.setInterpolation(getInterpolation());
-        addAction(action);
+        return action;
     }
 
 
