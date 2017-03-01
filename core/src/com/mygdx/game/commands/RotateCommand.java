@@ -19,6 +19,9 @@ public class RotateCommand implements ICommand {
     public void executeOn(RunningActor actor){
         actor.rotate(degrees);
     }
+    public ICommand clone(){
+        return new RotateCommand(degrees);
+    }
 
 
 

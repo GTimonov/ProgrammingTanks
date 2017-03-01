@@ -62,20 +62,20 @@ public class LevelModel {
     private void createTank(){
         Class item = ActorsFactory.getActorByName(ActorType.TANK_ACTOR);
         tank = new TankActor(this);
-        tank.positionItemByCell(0, 0);
-        tank.setRotation(-RotateHelper.FOURTH);
+        tank.positionItemByCell(4, 0);
+        //tank.setRotation(-RotateHelper.FOURTH);
 
     }
     private void createWalls(){
         walls = new Array<MainActor>();
 
-        MainActor q = new WallActor();
-        q.positionItemByCell(1, 2);
-        walls.add(q);
-
-        MainActor w = new WallActor();
-        w.positionItemByCell(2, 2);
-        walls.add(w);
+//        MainActor q = new WallActor();
+//        q.positionItemByCell(1, 2);
+//        walls.add(q);
+//
+//        MainActor w = new WallActor();
+//        w.positionItemByCell(2, 2);
+//        walls.add(w);
 
 //        MainActor e = new WallActor();
 //        e.positionItemByCell(2, 1);

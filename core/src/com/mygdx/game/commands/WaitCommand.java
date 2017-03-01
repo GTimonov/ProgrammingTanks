@@ -12,10 +12,12 @@ public class WaitCommand implements ICommand {
 
     public WaitCommand() {
 
-
     }
     public void executeOn(RunningActor actor){
         actor.waitStep();
+    }
+    public ICommand clone(){
+        return new WaitCommand();
     }
 
 }

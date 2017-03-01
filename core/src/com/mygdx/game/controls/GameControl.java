@@ -1,10 +1,12 @@
 package com.mygdx.game.controls;
 
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.commands.CycleCommand;
 import com.mygdx.game.commands.ICommand;
 import com.mygdx.game.commands.MoveCommand;
 import com.mygdx.game.commands.RotateCommand;
 
+import com.mygdx.game.commands.WaitCommand;
 import com.mygdx.game.models.GameModel;
 import com.mygdx.game.utils.RotateHelper;
 
@@ -28,36 +30,21 @@ public class GameControl {
     }
     public void addCommand(){
         Array<ICommand> commands = new Array<ICommand>();
+        commands.add(new WaitCommand());
+        commands.add(new RotateCommand(-RotateHelper.FOURTH));
+        commands.add(new RotateCommand(RotateHelper.FOURTH));
+        commands.add(new CycleCommand(3, 2));
+        commands.add(new RotateCommand(RotateHelper.DUAL));
+        //commands.add(new WaitCommand());
+        commands.add(new CycleCommand(5, 2));
         commands.add(new MoveCommand());
-        //commands.add(new RotateCommand(-RotateHelper.DUAL));
-        commands.add(new MoveCommand());
-        commands.add(new MoveCommand());
-        commands.add(new MoveCommand());
-
-//        commands.add(new MoveCommand());
-//        commands.add(new RotateCommand(-RotateHelper.HALF));
-//        commands.add(new MoveCommand());
-//        commands.add(new RotateCommand(RotateHelper.FOURTH));
-//        commands.add(new MoveCommand());
-//        commands.add(new MoveCommand());
-//        commands.add(new MoveCommand());
-//        commands.add(new RotateCommand( RotateHelper.FOURTH));
-//        commands.add(new RotateCommand(-RotateHelper.HALF_DUAL));
-//        commands.add(new RotateCommand(-RotateHelper.HALF));
-//        commands.add(new MoveCommand());
-//        commands.add(new RotateCommand( RotateHelper.FOURTH));
-//        commands.add(new MoveCommand());
-//        commands.add(new RotateCommand(-RotateHelper.HALF));
-//        commands.add(new MoveCommand());
-//        commands.add(new RotateCommand(RotateHelper.FOURTH));
-//
-//        commands.add(new MoveCommand());
-//        commands.add(new RotateCommand( RotateHelper.FOURTH));
-//        commands.add(new MoveCommand());
-//        commands.add(new RotateCommand( RotateHelper.FOURTH));
         model.setUserActions(commands);
     }
     public void removeCommand(){}
+
+    public void setCurrentCommandNum(int num){
+        model.currentCommandNum = num;
+    }
 
 
 

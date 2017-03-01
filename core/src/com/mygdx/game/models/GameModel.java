@@ -1,7 +1,9 @@
 package com.mygdx.game.models;
 
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.commands.CycleCommand;
 import com.mygdx.game.commands.ICommand;
+import com.mygdx.game.commands.MoveCommand;
 import com.mygdx.game.utils.Settings;
 
 /**
@@ -34,6 +36,8 @@ public class GameModel {
     public LevelModel levelModel;
 
     public CellsMap cellsMap;
+
+    public int currentCommandNum;
 
 
     public interface IModelListener{

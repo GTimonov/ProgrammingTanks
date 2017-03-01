@@ -1,5 +1,6 @@
 package com.mygdx.game.actors;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
@@ -7,14 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
-import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.commands.ICommand;
 import com.mygdx.game.commands.MovingCommandsInvoker;
 import com.mygdx.game.models.LevelModel;
 import com.mygdx.game.utils.RotateHelper;
 import com.mygdx.game.utils.Settings;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 /**
  * Created by Goshan on 01.02.2017.
@@ -28,7 +27,7 @@ public abstract class RunningActor extends MainActor {
         this.levelModel = levelModel;
     }
 
-    private MovingCommandsInvoker commandsInvoker;
+    protected MovingCommandsInvoker commandsInvoker;
 
     private LevelModel levelModel;
 
@@ -64,10 +63,11 @@ public abstract class RunningActor extends MainActor {
                 }
                 else if (leftCellWall) {
                     addAction(getBounceAction(rightCell, -RotateHelper.HALF));
+                    currentCell = rightCell;
                 }
                 else if (rightCellWall) {
                     addAction(getBounceAction(leftCell,RotateHelper.HALF));
-
+                    currentCell = leftCell;
                 }
             }
         }
@@ -78,7 +78,7 @@ public abstract class RunningActor extends MainActor {
         }
     }
     public void waitStep(){
-        waitAct();
+        addAction(getMoveAction(currentCell));
     }
     public void rotate(int angle){
         addAction(getRotateAction(angle));
@@ -91,8 +91,10 @@ public abstract class RunningActor extends MainActor {
     }
 
     public void applyCommand(){
-        if (commandsInvoker.hasCommand())
+        if (commandsInvoker.hasCommand()) {
             commandsInvoker.executeNext(this);
+            Gdx.app.log("command num: ", Integer.toString(commandsInvoker.getCurrentNum()));
+        }
     }
 
 
@@ -113,7 +115,6 @@ public abstract class RunningActor extends MainActor {
 
         super.addAction(Actions.sequence(action, new Action(){
             public boolean act (float delta){
-
                 applyCommand();
                 return true;
             }
@@ -139,11 +140,6 @@ public abstract class RunningActor extends MainActor {
         return Actions.parallel(getMoveAction(cell), getRotateAction(angle));
     }
 
-    private Action waitAct(){
-        TemporalAction action = Actions.action(TemporalAction.class);
-        action.setDuration(getSpeed());
-        return action;
-    }
 
     private Action getRotateAction(int angle){
         RotateByAction action =  Actions.action(RotateByAction.class);
@@ -159,7 +155,7 @@ public abstract class RunningActor extends MainActor {
         MoveToAction action = Actions.action(MoveToAction.class);
         action.setPosition(x, y);
         action.setDuration(getSpeed());
-        action.setInterpolation(getInterpolation());
+        //action.setInterpolation(getInterpolation());
         return action;
     }
 

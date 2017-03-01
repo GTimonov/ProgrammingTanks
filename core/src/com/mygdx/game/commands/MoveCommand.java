@@ -15,4 +15,7 @@ public class MoveCommand implements ICommand{
     public void executeOn(RunningActor actor){
         actor.move();
     }
+    public ICommand clone(){
+        return new MoveCommand();
+    }
 }
