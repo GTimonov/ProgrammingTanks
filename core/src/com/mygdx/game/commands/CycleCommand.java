@@ -18,7 +18,7 @@ public class CycleCommand implements ICommand {
         this.iterationsLength = iterationsLength;
     }
     public void executeOn(RunningActor actor){
-        Gdx.app.error("Хуй", ", а не выполнение цикла");
+        Gdx.app.error("Хуй тебе", ", а не выполнение цикла");
     }
     public ICommand clone(){
         return null;

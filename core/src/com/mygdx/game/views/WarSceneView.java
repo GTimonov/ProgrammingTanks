@@ -76,24 +76,16 @@ public class WarSceneView extends Group implements  GameModel.IModelListener{
     ///////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void act (float delta) {
-        super.act(delta);
-
+    protected void drawDebugBounds (ShapeRenderer shapes) {
+        super.drawDebugBounds(shapes);
         if (Settings.IS_DEBUG)
         {
-            if (debugRenderer == null)
-                debugRenderer = new ShapeRenderer();
-            debugRenderer.begin(ShapeRenderer.ShapeType.Line);
-            debugRenderer.setColor(Color.RED);
-            float screenWidth = Settings.CELLS_HORIZONTAL_COUNT * Settings.CELL_SIZE;
-            float screenHeight = Settings.CELLS_VERTICAL_COUNT * Settings.CELL_SIZE;
+            shapes.setColor(Color.RED);
 
-            for (int i = 0; i < Settings.CELLS_HORIZONTAL_COUNT; i++)
-                debugRenderer.line(0, i * Settings.CELL_SIZE, screenHeight,  i * Settings.CELL_SIZE);
-            for (int i = 0; i < Settings.CELLS_VERTICAL_COUNT; i++)
-                debugRenderer.line(i * Settings.CELL_SIZE, 0 , i * Settings.CELL_SIZE, screenWidth);
-            debugRenderer.end();
+            for (int i = 0; i < Settings.HEIGHT_IN_CELLS; i++)
+                shapes.line(getX(), i * Settings.CELL_SIZE + getY(), getWidth() + getX(),  i * Settings.CELL_SIZE + getY());
+            for (int j = 0; j < Settings.WIDTH_IN_CELLS; j++)
+                shapes.line(j * Settings.CELL_SIZE + getX(), getY() , j * Settings.CELL_SIZE + getX(), getHeight() + getY());
         }
     }
-
 }

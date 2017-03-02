@@ -20,6 +20,7 @@ public class MyTanksGame extends Game {
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
 		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
 		setScreen(new GameScreen(this, new LevelModel(1)));
 	}
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.mygdx.game.MyTanksGame;
 import com.mygdx.game.controls.GameControl;
 import com.mygdx.game.models.GameModel;
@@ -30,7 +31,8 @@ public class GameScreen extends ScreenAdapter {
     private GameControl gameControl;
     private LevelModel levelModel;
 
-
+    private VerticalGroup mainVGroup;
+    private WarSceneView warScene;
 
     public GameScreen(MyTanksGame game, LevelModel levelModel)
     {
@@ -42,7 +44,7 @@ public class GameScreen extends ScreenAdapter {
         logger = new FPSLogger();
         if (Settings.IS_DEBUG)
             stage.setDebugAll(true);
-        addCommands();
+
 
     }
 
@@ -66,10 +68,14 @@ public class GameScreen extends ScreenAdapter {
 
         gameControl = new GameControl(gameModel);
 
-        stage.addActor(new WarSceneView(gameModel, levelModel));
+
+        addViews();
+
         gameModel.createLevel();
         gameControl.addCommand();
         gameControl.startRunning();
+
+
     }
 
     @Override
@@ -82,9 +88,18 @@ public class GameScreen extends ScreenAdapter {
     ///////////////////////////////////////////////////////////////////////////
 
 
-    private void addCommands(){
+    private void addViews(){
+        mainVGroup = new VerticalGroup();
+        mainVGroup.setSize(stage.getWidth(), stage.getHeight());
+        stage.addActor(mainVGroup);
+
+        warScene = new WarSceneView(gameModel, levelModel);
+        warScene.setSize(stage.getWidth(), (Settings.HEIGHT_IN_CELLS) * Settings.CELL_SIZE);
+        mainVGroup.addActor(warScene);
+
         commandsButtons = new CommandsButtonsView();
-        stage.addActor(commandsButtons);
+        commandsButtons.setSize(stage.getWidth(),Settings.CELL_SIZE*2);
+        mainVGroup.addActor(commandsButtons);
     }
 
 

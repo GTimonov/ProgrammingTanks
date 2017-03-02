@@ -11,8 +11,8 @@ public class Settings {
     public final static int TANK_HEIGHT = 60;
 
     public final static int CELL_SIZE = 64;
-    public final static int CELLS_HORIZONTAL_COUNT = 10;
-    public final static int CELLS_VERTICAL_COUNT = 10;
+    public final static int WIDTH_IN_CELLS = 10;
+    public final static int HEIGHT_IN_CELLS = 8;
 
     /**количество клеток в секунду или пол оборота*/
     public final static int MAIN_SPEED = 1;

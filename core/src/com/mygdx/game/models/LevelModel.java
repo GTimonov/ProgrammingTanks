@@ -49,6 +49,8 @@ public class LevelModel {
     }
 
     public Boolean checkCellForWall(Vector2 cell){
+        if (cell.x < 0 || cell.x > Settings.WIDTH_IN_CELLS || cell.y < 0 || cell.y > Settings.HEIGHT_IN_CELLS)
+            return true;
         for (MainActor wall: walls)
             if (cell.equals(wall.getCurrentCell()))
                 return true;
@@ -62,7 +64,7 @@ public class LevelModel {
     private void createTank(){
         Class item = ActorsFactory.getActorByName(ActorType.TANK_ACTOR);
         tank = new TankActor(this);
-        tank.positionItemByCell(4, 0);
+        tank.positionItemByCell(4, 2);
         //tank.setRotation(-RotateHelper.FOURTH);
 
     }
@@ -86,7 +88,7 @@ public class LevelModel {
         enemies = new Array<MainActor>();
         for (int i = 0; i < 2; i++) {
             MainActor enemyActor = new EnemyActor(this);
-            enemyActor.positionItemByCell((int)(Math.random()* Settings.CELLS_VERTICAL_COUNT), (int)(Math.random()* Settings.CELLS_HORIZONTAL_COUNT));
+            enemyActor.positionItemByCell((int)(Math.random()* Settings.WIDTH_IN_CELLS), (int)(Math.random()* Settings.HEIGHT_IN_CELLS));
             enemies.add(enemyActor);
         }
     }

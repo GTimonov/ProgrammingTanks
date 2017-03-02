@@ -8,5 +8,6 @@ import com.mygdx.game.actors.RunningActor;
 
 public interface ICommand {
     void executeOn(RunningActor actor);
+
     ICommand clone();
 }

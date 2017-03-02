@@ -16,7 +16,7 @@ public class GameModel {
     ///////////////////////////////////////////////////////////////////////////
     public GameModel(){
 
-        this.cellsMap = new CellsMap(Settings.CELLS_HORIZONTAL_COUNT, Settings.CELLS_VERTICAL_COUNT);
+        this.cellsMap = new CellsMap(Settings.WIDTH_IN_CELLS, Settings.HEIGHT_IN_CELLS);
         listeners = new Array();
     }
 

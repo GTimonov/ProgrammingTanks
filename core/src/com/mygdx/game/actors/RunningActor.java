@@ -2,6 +2,7 @@ package com.mygdx.game.actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -109,7 +110,6 @@ public abstract class RunningActor extends MainActor {
                     (int)getWidth(), (int)getHeight(), false, false);
         }
     }
-
     @Override
     public void addAction(Action action){
 
@@ -120,7 +120,14 @@ public abstract class RunningActor extends MainActor {
             }
         }));
     }
-
+    @Override
+    protected void drawDebugBounds (ShapeRenderer shapes) {
+        super.drawDebugBounds(shapes);
+        shapes.rect(getX() + getWidth()/6, getY() + getHeight() - getHeight()/8,
+                    getWidth()/2-getWidth()/6,  - getHeight()/2 + getHeight()/8,
+                    getWidth()/6*4, getHeight()/4,
+                    getScaleX(), getScaleY(), getRotation());
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // private methods
