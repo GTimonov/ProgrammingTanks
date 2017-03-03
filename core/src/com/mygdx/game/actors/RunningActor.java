@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.commands.ICommand;
-import com.mygdx.game.commands.MovingCommandsInvoker;
+import com.mygdx.game.commands.CommandsInvoker;
 import com.mygdx.game.models.LevelModel;
 import com.mygdx.game.utils.RotateHelper;
 import com.mygdx.game.utils.Settings;
@@ -24,11 +24,11 @@ public abstract class RunningActor extends MainActor {
 
     public RunningActor(LevelModel levelModel) {
         super();
-        commandsInvoker = new MovingCommandsInvoker();
+        commandsInvoker = new CommandsInvoker();
         this.levelModel = levelModel;
     }
 
-    protected MovingCommandsInvoker commandsInvoker;
+    protected CommandsInvoker commandsInvoker;
 
     private LevelModel levelModel;
 
@@ -86,16 +86,15 @@ public abstract class RunningActor extends MainActor {
     }
 
     public void setCommands(Array<ICommand> commands){
-        for (ICommand command: commands) {
-            commandsInvoker.addCommand(command);
-        }
+        commandsInvoker.addCommands(commands);
     }
 
     public void applyCommand(){
-        if (commandsInvoker.hasCommand()) {
+        if (commandsInvoker.hasCommand())
             commandsInvoker.executeNext(this);
+        if (commandsInvoker.hasCommand())
             Gdx.app.log("command num: ", Integer.toString(commandsInvoker.getCurrentNum()));
-        }
+
     }
 
 
@@ -140,7 +139,7 @@ public abstract class RunningActor extends MainActor {
     }
 
     protected float getSpeed(){
-        return Settings.MAIN_SPEED;
+        return 1/Settings.MAIN_SPEED;
     }
 
     private Action getBounceAction(Vector2 cell, int angle){

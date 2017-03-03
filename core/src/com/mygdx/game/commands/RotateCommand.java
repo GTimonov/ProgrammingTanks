@@ -1,5 +1,6 @@
 package com.mygdx.game.commands;
 
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.actors.RunningActor;
 
 /**
@@ -19,10 +20,18 @@ public class RotateCommand implements ICommand {
     public void executeOn(RunningActor actor){
         actor.rotate(degrees);
     }
-    public ICommand clone(){
-        return new RotateCommand(degrees);
-    }
 
+    public Array<ICommand> getCommandsIncluded(){
+        Array<ICommand> array = new Array<ICommand>();
+        array.add(this);
+        return array;
+    }
+    public Boolean executable(){
+        return true;
+    }
+    public int getIterationsLength(){
+        return 1;
+    }
 
 
 

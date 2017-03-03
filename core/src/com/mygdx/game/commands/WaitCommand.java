@@ -1,5 +1,6 @@
 package com.mygdx.game.commands;
 
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.actors.RunningActor;
 
 /**
@@ -9,15 +10,30 @@ import com.mygdx.game.actors.RunningActor;
 public class WaitCommand implements ICommand {
 
 
-
-    public WaitCommand() {
-
+    private int cells;
+    public WaitCommand(int cells) {
+        this.cells = cells;
     }
+    public WaitCommand() {
+        this.cells = 1;
+    }
+
     public void executeOn(RunningActor actor){
         actor.waitStep();
     }
-    public ICommand clone(){
-        return new WaitCommand();
+
+    public Array<ICommand> getCommandsIncluded(){
+        Array<ICommand> array = new Array<ICommand>();
+        for (int i = 0; i < cells; i++)
+            array.add(new WaitCommand());
+        return array;
     }
+    public Boolean executable(){
+        return cells == 1;
+    }
+    public int getIterationsLength(){
+        return 1;
+    }
+
 
 }

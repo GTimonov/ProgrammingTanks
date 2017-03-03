@@ -21,6 +21,7 @@ public class GameControl {
     public GameControl(GameModel model){
         this.model = model;
     }
+    private Array<ICommand> commands = new Array<ICommand>();
 
     public void startRunning(){
         model.start();
@@ -29,15 +30,13 @@ public class GameControl {
 
     }
     public void addCommand(){
-        Array<ICommand> commands = new Array<ICommand>();
-        commands.add(new WaitCommand());
-        commands.add(new RotateCommand(-RotateHelper.FOURTH));
-        commands.add(new RotateCommand(RotateHelper.FOURTH));
-        commands.add(new CycleCommand(3, 2));
+        commands.add(new WaitCommand(5));
+        commands.add(new MoveCommand(2));
+        commands.add(new RotateCommand(-RotateHelper.DUAL));
+        commands.add(new CycleCommand(createCycleCommands(2), 2));
         commands.add(new RotateCommand(RotateHelper.DUAL));
-        //commands.add(new WaitCommand());
-        commands.add(new CycleCommand(5, 2));
-        commands.add(new MoveCommand());
+        commands.add(new CycleCommand(createCycleCommands(4), 2));
+        commands.add(new MoveCommand(5));
         model.setUserActions(commands);
     }
     public void removeCommand(){}
@@ -47,5 +46,13 @@ public class GameControl {
     }
 
 
+    private Array<ICommand> createCycleCommands(int mount){
 
+        Array<ICommand> items = new Array<ICommand>();
+        int lenght = commands.size;
+        for (int i = lenght - mount; i < lenght; i++) {
+            items.add(commands.get(i));
+        }
+        return items;
+    }
 }

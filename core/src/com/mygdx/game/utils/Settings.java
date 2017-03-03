@@ -19,7 +19,7 @@ public class Settings {
 
 
     /**коефициент скорости такнка откносительно MAIN_SPEED*/
-    public final static float TANK_CELLSPEED = 1f;
+    public final static float TANK_CELLSPEED = 5f;
 
 
 }

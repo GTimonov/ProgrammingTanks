@@ -1,6 +1,6 @@
 package com.mygdx.game.commands;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.actors.RunningActor;
 
 /**
@@ -10,22 +10,23 @@ import com.mygdx.game.actors.RunningActor;
 public class CycleCommand implements ICommand {
 
 
-    private int comnandsLengdh, iterationsLength;
+    private Array<ICommand> comnandsIncluded;
+    private int iterationsLength;
 
-    public CycleCommand(int comnandsLengdh, int iterationsLength) {
+    public CycleCommand(Array<ICommand> comnandsIncluded, int iterationsLength) {
 
-        this.comnandsLengdh = comnandsLengdh;
+        this.comnandsIncluded = comnandsIncluded;
         this.iterationsLength = iterationsLength;
     }
     public void executeOn(RunningActor actor){
-        Gdx.app.error("Хуй тебе", ", а не выполнение цикла");
+
     }
-    public ICommand clone(){
-        return null;
+    public Boolean executable(){
+        return false;
     }
 
-    public int getCommandsLength(){
-        return comnandsLengdh;
+    public Array<ICommand> getCommandsIncluded(){
+        return comnandsIncluded;
     }
     public int getIterationsLength(){
         return iterationsLength;

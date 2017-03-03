@@ -36,7 +36,7 @@ public class TankActor extends RunningActor {
 
     @Override
     public float getSpeed(){
-        return Settings.TANK_CELLSPEED;
+        return 1/Settings.TANK_CELLSPEED;
     }
 
     @Override

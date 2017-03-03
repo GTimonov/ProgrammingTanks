@@ -6,9 +6,7 @@ import com.mygdx.game.actors.EnemyActor;
 import com.mygdx.game.actors.MainActor;
 import com.mygdx.game.actors.RunningActor;
 import com.mygdx.game.actors.TankActor;
-import com.mygdx.game.actors.WallActor;
 import com.mygdx.game.factories.ActorsFactory;
-import com.mygdx.game.utils.RotateHelper;
 import com.mygdx.game.utils.Settings;
 
 /**
@@ -49,7 +47,7 @@ public class LevelModel {
     }
 
     public Boolean checkCellForWall(Vector2 cell){
-        if (cell.x < 0 || cell.x > Settings.WIDTH_IN_CELLS || cell.y < 0 || cell.y > Settings.HEIGHT_IN_CELLS)
+        if (cell.x < 0 || cell.x >= Settings.WIDTH_IN_CELLS || cell.y < 0 || cell.y >= Settings.HEIGHT_IN_CELLS)
             return true;
         for (MainActor wall: walls)
             if (cell.equals(wall.getCurrentCell()))
@@ -64,7 +62,7 @@ public class LevelModel {
     private void createTank(){
         Class item = ActorsFactory.getActorByName(ActorType.TANK_ACTOR);
         tank = new TankActor(this);
-        tank.positionItemByCell(4, 2);
+        tank.positionItemByCell(4, 0);
         //tank.setRotation(-RotateHelper.FOURTH);
 
     }
