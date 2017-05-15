@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.MyTanksGame;
 import com.mygdx.game.controls.GameControl;
 import com.mygdx.game.models.GameModel;
@@ -89,6 +90,7 @@ public class GameScreen extends ScreenAdapter {
 
 
     private void addViews(){
+
         mainVGroup = new VerticalGroup();
         mainVGroup.setSize(stage.getWidth(), stage.getHeight());
         stage.addActor(mainVGroup);
@@ -98,8 +100,10 @@ public class GameScreen extends ScreenAdapter {
         mainVGroup.addActor(warScene);
 
         commandsButtons = new CommandsButtonsView();
-        commandsButtons.setSize(stage.getWidth(),Settings.CELL_SIZE*2);
+        float height = stage.getWidth() / Settings.COMMANDS_STACK_LENGTH * Settings.COMMANDS_STACK_HEIGHT;
+        commandsButtons.setSize(stage.getWidth(),height);
         mainVGroup.addActor(commandsButtons);
+        mainVGroup.wrap(false);
     }
 
 

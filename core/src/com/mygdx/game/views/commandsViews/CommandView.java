@@ -15,6 +15,7 @@ public class CommandView extends Actor implements ICommandView {
 
     public CommandView(ICommand command){
         this.command = command;
+        setBounds(getX(),getY(),getWidth(),getHeight());
         texture = createTexture(command);
     }
     public ICommand getCommand(){
